@@ -1,0 +1,15 @@
+"D:\arm\bin\armproc.dll" 
+
+"D:\arm\bin\armstlink2.dll" 
+
+"D:\work\CorTex\2018_08_16-Led_1\EWARM\2018_08_16-Led_1\Exe\2018_08_16-Led_1.out" 
+
+--plugin="D:\arm\bin\armbat.dll" 
+
+--device_macro="D:\arm\config\debugger\ST\STM32F1xx.dmac" 
+
+--flash_loader="D:\arm\config\flashloader\ST\FlashSTM32F10xxC.board" 
+
+
+
+

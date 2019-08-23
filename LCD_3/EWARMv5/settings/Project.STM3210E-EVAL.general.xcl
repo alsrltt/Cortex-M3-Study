@@ -1,0 +1,15 @@
+"D:\arm\bin\armproc.dll" 
+
+"D:\arm\bin\armjlink2.dll" 
+
+"D:\work\CorTex\LCD_3\EWARMv5\Debug\Exe\Project.out" 
+
+--plugin="D:\arm\bin\armbat.dll" 
+
+--device_macro="D:\arm\config\debugger\ST\STM32F1xx.dmac" 
+
+--flash_loader="D:\arm\config\flashloader\ST\FlashSTM32F10xxC.board" 
+
+
+
+

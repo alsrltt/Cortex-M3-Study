@@ -1,0 +1,981 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.30.1.114/W32 for ARM         27/Sep/2018  14:02:21
+# Copyright 1999-2018 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  D:\work\CorTex\LCD_2\stm32f10x_it.c
+#    Command line =  
+#        -f C:\Users\KMG\AppData\Local\Temp\EW46DD.tmp
+#        (D:\work\CorTex\LCD_2\stm32f10x_it.c -D VECT_TAB_FLASH -lcN
+#        D:\work\CorTex\LCD_2\EWARMv5\Debug\List -o
+#        D:\work\CorTex\LCD_2\EWARMv5\Debug\Obj --debug --endian=little
+#        --cpu=Cortex-M3 -e --fpu=None --dlib_config
+#        D:\arm\inc\c\DLib_Config_Full.h -I D:\work\CorTex\LCD_2\EWARMv5\..\ -I
+#        D:\work\CorTex\LCD_2\EWARMv5\..\..\ -I
+#        D:\work\CorTex\LCD_2\EWARMv5\..\..\FWLib\library\inc\ -Ohs
+#        --use_c++_inline --require_prototypes)
+#    Locale       =  C
+#    List file    =  D:\work\CorTex\LCD_2\EWARMv5\Debug\List\stm32f10x_it.lst
+#    Object file  =  D:\work\CorTex\LCD_2\EWARMv5\Debug\Obj\stm32f10x_it.o
+#
+###############################################################################
+
+D:\work\CorTex\LCD_2\stm32f10x_it.c
+      1          #include "stm32f10x_it.h"
+      2          #include "stm32f10x_lib.h"
+      3          
+      4          extern void putstr(char *str);
+      5          
+      6          void TIM2_IRQHandler(void)
+      7          {
+      8          
+      9          }
+     10          
+     11          
+     12          /*******************************************************************************
+     13          * Function Name  : TIM3_IRQHandler
+     14          * Description    : Wake up methode from Sleep mode
+     15                            60 Sec Interrupt
+     16          *******************************************************************************/
+     17          
+     18          void TIM3_IRQHandler(void)
+     19          {
+     20          
+     21          }
+     22          
+     23          
+     24          
+     25          u8 Buffer_USART1[50],  USART1_rx_end=0, USART1_len=0;
+     26          void USART1_IRQHandler(void)
+     27          {
+     28             static u8 usart1_chk=0;
+     29             u8 data_in;   
+     30             if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET){
+     31                USART_ClearITPendingBit(USART1, USART_IT_RXNE);         
+     32                data_in=USART_ReceiveData(USART1);         
+     33                switch(usart1_chk)
+     34                {
+     35                    case 0: 
+     36                      if(data_in==0x02){                    
+     37                          Buffer_USART1[USART1_len]=data_in;
+     38                          USART1_len++;              
+     39                          usart1_chk=1;
+     40                      }
+     41                      else usart1_chk=0;
+     42                      break;            
+     43                    case 1:
+     44                      Buffer_USART1[USART1_len]=data_in;
+     45                      USART1_len++;       
+     46                       if(data_in==0x0A){
+     47                           USART1_rx_end=1;
+     48                           usart1_chk=0;
+     49                      }
+     50                      break;            
+     51                    default : 
+     52                      usart1_chk=0;
+     53                      break;        
+     54                }   
+     55             }
+     56          }
+     57          
+     58          
+     59          
+     60          
+     61          void USART2_IRQHandler(void)
+     62          {
+     63             
+     64          }
+     65          
+     66          
+     67          
+     68          void USART3_IRQHandler(void)            
+     69          {
+     70            
+     71          }
+     72          
+     73          
+     74          
+     75          void UART4_IRQHandler(void)
+     76          {
+     77          
+     78          	
+     79          }
+     80          
+     81          
+     82          
+     83          void UART5_IRQHandler(void)
+     84          {
+     85          	
+     86          }
+     87          
+     88          void SPI2_IRQHandler(void)
+     89          {
+     90          
+     91          }
+     92          
+     93          /*******************************************************************************
+     94          * Description    : This function handles SDIO global interrupt request.
+     95          *******************************************************************************/
+     96          void SDIO_IRQHandler(void)
+     97          {
+     98          
+     99          }
+    100          
+    101          
+    102          extern u16 ADCConvertedValue[1];
+    103          u16 adc1_buffer[1];
+    104          void DMA1_Channel1_IRQHandler(void)
+    105          {
+    106              u8 i;   
+    107              
+    108              for(i=0; i<1; i++){
+    109                 adc1_buffer[i] = ADCConvertedValue[i];
+    110              }
+    111              DMA_ClearITPendingBit(DMA1_IT_GL1);	
+    112          }
+    113          
+    114          
+    115          
+    116          
+    117          
+    118          void RTC_IRQHandler(void)
+    119          {
+    120          
+    121          }
+    122          
+    123          
+    124          /*******************************************************************************
+    125          * Function Name  : NMIException
+    126          * Description    : This function handles NMI exception.
+    127          * Input          : None
+    128          * Output         : None
+    129          * Return         : None
+    130          *******************************************************************************/
+    131          void NMIException(void)
+    132          {
+    133          }
+    134          
+    135          /*******************************************************************************
+    136          * Function Name  : HardFaultException
+    137          * Description    : This function handles Hard Fault exception.
+    138          * Input          : None
+    139          * Output         : None
+    140          * Return         : None
+    141          *******************************************************************************/
+    142          void HardFaultException(void)
+    143          {
+    144            /* Go to infinite loop when Hard Fault exception occurs */
+    145            while (1)
+    146            {
+    147            }
+    148          }
+    149          
+    150          /*******************************************************************************
+    151          * Function Name  : MemManageException
+    152          * Description    : This function handles Memory Manage exception.
+    153          * Input          : None
+    154          * Output         : None
+    155          * Return         : None
+    156          *******************************************************************************/
+    157          void MemManageException(void)
+    158          {
+    159            /* Go to infinite loop when Memory Manage exception occurs */
+    160            while (1)
+    161            {
+    162            }
+    163          }
+    164          
+    165          /*******************************************************************************
+    166          * Function Name  : BusFaultException
+    167          * Description    : This function handles Bus Fault exception.
+    168          * Input          : None
+    169          * Output         : None
+    170          * Return         : None
+    171          *******************************************************************************/
+    172          void BusFaultException(void)
+    173          {
+    174            /* Go to infinite loop when Bus Fault exception occurs */
+    175            while (1)
+    176            {
+    177            }
+    178          }
+    179          
+    180          /*******************************************************************************
+    181          * Function Name  : UsageFaultException
+    182          * Description    : This function handles Usage Fault exception.
+    183          * Input          : None
+    184          * Output         : None
+    185          * Return         : None
+    186          *******************************************************************************/
+    187          void UsageFaultException(void)
+    188          {
+    189            /* Go to infinite loop when Usage Fault exception occurs */
+    190            while (1)
+    191            {
+    192            }
+    193          }
+    194          
+    195          /*******************************************************************************
+    196          * Function Name  : DebugMonitor
+    197          * Description    : This function handles Debug Monitor exception.
+    198          * Input          : None
+    199          * Output         : None
+    200          * Return         : None
+    201          *******************************************************************************/
+    202          void DebugMonitor(void)
+    203          {
+    204          }
+    205          
+    206          /*******************************************************************************
+    207          * Function Name  : SVCHandler
+    208          * Description    : This function handles SVCall exception.
+    209          * Input          : None
+    210          * Output         : None
+    211          * Return         : None
+    212          *******************************************************************************/
+    213          void SVCHandler(void)
+    214          {
+    215          }
+    216          
+    217          /*******************************************************************************
+    218          * Function Name  : PendSVC
+    219          * Description    : This function handles PendSVC exception.
+    220          * Input          : None
+    221          * Output         : None
+    222          * Return         : None
+    223          *******************************************************************************/
+    224          void PendSVC(void)
+    225          {
+    226          }
+    227          
+    228          /*******************************************************************************
+    229          * Function Name  : SysTickHandler
+    230          * Description    : This function handles SysTick Handler.
+    231          * Input          : None
+    232          * Output         : None
+    233          * Return         : None
+    234          *******************************************************************************/
+    235          void SysTickHandler(void)
+    236          {
+    237          }
+    238          
+    239          /*******************************************************************************
+    240          * Function Name  : WWDG_IRQHandler
+    241          * Description    : This function handles WWDG interrupt request.
+    242          * Input          : None
+    243          * Output         : None
+    244          * Return         : None
+    245          *******************************************************************************/
+    246          void WWDG_IRQHandler(void)
+    247          {
+    248          }
+    249          
+    250          /*******************************************************************************
+    251          * Function Name  : PVD_IRQHandler
+    252          * Description    : This function handles PVD interrupt request.
+    253          * Input          : None
+    254          * Output         : None
+    255          * Return         : None
+    256          *******************************************************************************/
+    257          void PVD_IRQHandler(void)
+    258          {
+    259          }
+    260          
+    261          /*******************************************************************************
+    262          * Function Name  : TAMPER_IRQHandler
+    263          * Description    : This function handles Tamper interrupt request. 
+    264          * Input          : None
+    265          * Output         : None
+    266          * Return         : None
+    267          *******************************************************************************/
+    268          void TAMPER_IRQHandler(void)
+    269          {
+    270          }
+    271          
+    272          
+    273          
+    274          /*******************************************************************************
+    275          * Function Name  : FLASH_IRQHandler
+    276          * Description    : This function handles Flash interrupt request.
+    277          * Input          : None
+    278          * Output         : None
+    279          * Return         : None
+    280          *******************************************************************************/
+    281          void FLASH_IRQHandler(void)
+    282          {
+    283          }
+    284          
+    285          /*******************************************************************************
+    286          * Function Name  : RCC_IRQHandler
+    287          * Description    : This function handles RCC interrupt request. 
+    288          * Input          : None
+    289          * Output         : None
+    290          * Return         : None
+    291          *******************************************************************************/
+    292          void RCC_IRQHandler(void)
+    293          {
+    294          }
+    295          
+    296          /*******************************************************************************
+    297          * Function Name  : EXTI0_IRQHandler
+    298          * Description    : This function handles External interrupt Line 0 request.
+    299          * Input          : None
+    300          * Output         : None
+    301          * Return         : None
+    302          *******************************************************************************/
+    303          void EXTI0_IRQHandler(void)
+    304          {
+    305          }
+    306          
+    307          /*******************************************************************************
+    308          * Function Name  : EXTI1_IRQHandler
+    309          * Description    : This function handles External interrupt Line 1 request.
+    310          * Input          : None
+    311          * Output         : None
+    312          * Return         : None
+    313          *******************************************************************************/
+    314          void EXTI1_IRQHandler(void)
+    315          {
+    316          }
+    317          
+    318          /*******************************************************************************
+    319          * Function Name  : EXTI2_IRQHandler
+    320          * Description    : This function handles External interrupt Line 2 request.
+    321          * Input          : None
+    322          * Output         : None
+    323          * Return         : None
+    324          *******************************************************************************/
+    325          void EXTI2_IRQHandler(void)
+    326          {
+    327          }
+    328          
+    329          /*******************************************************************************
+    330          * Function Name  : EXTI3_IRQHandler
+    331          * Description    : This function handles External interrupt Line 3 request.
+    332          * Input          : None
+    333          * Output         : None
+    334          * Return         : None
+    335          *******************************************************************************/
+    336          void EXTI3_IRQHandler(void)
+    337          {
+    338          }
+    339          
+    340          /*******************************************************************************
+    341          * Function Name  : EXTI4_IRQHandler
+    342          * Description    : This function handles External interrupt Line 4 request.
+    343          * Input          : None
+    344          * Output         : None
+    345          * Return         : None
+    346          *******************************************************************************/
+    347          void EXTI4_IRQHandler(void)
+    348          {
+    349          }
+    350          
+    351          
+    352          
+    353          /*******************************************************************************
+    354          * Function Name  : DMA1_Channel2_IRQHandler
+    355          * Description    : This function handles DMA1 Channel 2 interrupt request.
+    356          * Input          : None
+    357          * Output         : None
+    358          * Return         : None
+    359          *******************************************************************************/
+    360          void DMA1_Channel2_IRQHandler(void)
+    361          {
+    362          }
+    363          
+    364          /*******************************************************************************
+    365          * Function Name  : DMA1_Channel3_IRQHandler
+    366          * Description    : This function handles DMA1 Channel 3 interrupt request.
+    367          * Input          : None
+    368          * Output         : None
+    369          * Return         : None
+    370          *******************************************************************************/
+    371          void DMA1_Channel3_IRQHandler(void)
+    372          {
+    373          }
+    374          
+    375          /*******************************************************************************
+    376          * Function Name  : DMA1_Channel4_IRQHandler
+    377          * Description    : This function handles DMA1 Channel 4 interrupt request.
+    378          * Input          : None
+    379          * Output         : None
+    380          * Return         : None
+    381          *******************************************************************************/
+    382          void DMA1_Channel4_IRQHandler(void)
+    383          {
+    384          }
+    385          
+    386          /*******************************************************************************
+    387          * Function Name  : DMA1_Channel5_IRQHandler
+    388          * Description    : This function handles DMA1 Channel 5 interrupt request.
+    389          * Input          : None
+    390          * Output         : None
+    391          * Return         : None
+    392          *******************************************************************************/
+    393          void DMA1_Channel5_IRQHandler(void)
+    394          {
+    395          }
+    396          
+    397          /*******************************************************************************
+    398          * Function Name  : DMA1_Channel6_IRQHandler
+    399          * Description    : This function handles DMA1 Channel 6 interrupt request.
+    400          * Input          : None
+    401          * Output         : None
+    402          * Return         : None
+    403          *******************************************************************************/
+    404          void DMA1_Channel6_IRQHandler(void)
+    405          {
+    406          }
+    407          
+    408          /*******************************************************************************
+    409          * Function Name  : DMA1_Channel7_IRQHandler
+    410          * Description    : This function handles DMA1 Channel 7 interrupt request.
+    411          * Input          : None
+    412          * Output         : None
+    413          * Return         : None
+    414          *******************************************************************************/
+    415          void DMA1_Channel7_IRQHandler(void)
+    416          {
+    417          }
+    418          
+    419          /*******************************************************************************
+    420          * Function Name  : ADC1_2_IRQHandler
+    421          * Description    : This function handles ADC1 and ADC2 global interrupts requests.
+    422          * Input          : None
+    423          * Output         : None
+    424          * Return         : None
+    425          *******************************************************************************/
+    426          void ADC1_2_IRQHandler(void)
+    427          {
+    428          }
+    429          
+    430          /*******************************************************************************
+    431          * Function Name  : USB_HP_CAN_TX_IRQHandler
+    432          * Description    : This function handles USB High Priority or CAN TX interrupts 
+    433          *                  requests.
+    434          * Input          : None
+    435          * Output         : None
+    436          * Return         : None
+    437          *******************************************************************************/
+    438          void USB_HP_CAN_TX_IRQHandler(void)
+    439          {
+    440          }
+    441          
+    442          /*******************************************************************************
+    443          * Function Name  : USB_LP_CAN_RX0_IRQHandler
+    444          * Description    : This function handles USB Low Priority or CAN RX0 interrupts 
+    445          *                  requests.
+    446          * Input          : None
+    447          * Output         : None
+    448          * Return         : None
+    449          *******************************************************************************/
+    450          void USB_LP_CAN_RX0_IRQHandler(void)
+    451          {
+    452          }
+    453          
+    454          /*******************************************************************************
+    455          * Function Name  : CAN_RX1_IRQHandler
+    456          * Description    : This function handles CAN RX1 interrupt request.
+    457          * Input          : None
+    458          * Output         : None
+    459          * Return         : None
+    460          *******************************************************************************/
+    461          void CAN_RX1_IRQHandler(void)
+    462          {
+    463          }
+    464          
+    465          /*******************************************************************************
+    466          * Function Name  : CAN_SCE_IRQHandler
+    467          * Description    : This function handles CAN SCE interrupt request.
+    468          * Input          : None
+    469          * Output         : None
+    470          * Return         : None
+    471          *******************************************************************************/
+    472          void CAN_SCE_IRQHandler(void)
+    473          {
+    474          }
+    475          
+    476          /*******************************************************************************
+    477          * Function Name  : EXTI9_5_IRQHandler
+    478          * Description    : This function handles External lines 9 to 5 interrupt request.
+    479          * Input          : None
+    480          * Output         : None
+    481          * Return         : None
+    482          *******************************************************************************/
+    483          void EXTI9_5_IRQHandler(void)
+    484          {
+    485          }
+    486          
+    487          /*******************************************************************************
+    488          * Function Name  : TIM1_BRK_IRQHandler
+    489          * Description    : This function handles TIM1 Break interrupt request.
+    490          * Input          : None
+    491          * Output         : None
+    492          * Return         : None
+    493          *******************************************************************************/
+    494          void TIM1_BRK_IRQHandler(void)
+    495          {
+    496          }
+    497          
+    498          /*******************************************************************************
+    499          * Function Name  : TIM1_UP_IRQHandler
+    500          * Description    : This function handles TIM1 overflow and update interrupt 
+    501          *                  request.
+    502          * Input          : None
+    503          * Output         : None
+    504          * Return         : None
+    505          *******************************************************************************/
+    506          void TIM1_UP_IRQHandler(void)
+    507          {
+    508          }
+    509          
+    510          /*******************************************************************************
+    511          * Function Name  : TIM1_TRG_COM_IRQHandler
+    512          * Description    : This function handles TIM1 Trigger and commutation interrupts 
+    513          *                  requests.
+    514          * Input          : None
+    515          * Output         : None
+    516          * Return         : None
+    517          *******************************************************************************/
+    518          void TIM1_TRG_COM_IRQHandler(void)
+    519          {
+    520          }
+    521          
+    522          /*******************************************************************************
+    523          * Function Name  : TIM1_CC_IRQHandler
+    524          * Description    : This function handles TIM1 capture compare interrupt request.
+    525          * Input          : None
+    526          * Output         : None
+    527          * Return         : None
+    528          *******************************************************************************/
+    529          void TIM1_CC_IRQHandler(void)
+    530          {
+    531          }
+    532          
+    533          
+    534          
+    535          /*******************************************************************************
+    536          * Function Name  : TIM4_IRQHandler
+    537          * Description    : This function handles TIM4 global interrupt request.
+    538          * Input          : None
+    539          * Output         : None
+    540          * Return         : None
+    541          *******************************************************************************/
+    542          void TIM4_IRQHandler(void)
+    543          {
+    544          }
+    545          
+    546          /*******************************************************************************
+    547          * Function Name  : I2C1_EV_IRQHandler
+    548          * Description    : This function handles I2C1 Event interrupt request.
+    549          * Input          : None
+    550          * Output         : None
+    551          * Return         : None
+    552          *******************************************************************************/
+    553          void I2C1_EV_IRQHandler(void)
+    554          {
+    555          }
+    556          
+    557          /*******************************************************************************
+    558          * Function Name  : I2C1_ER_IRQHandler
+    559          * Description    : This function handles I2C1 Error interrupt request.
+    560          * Input          : None
+    561          * Output         : None
+    562          * Return         : None
+    563          *******************************************************************************/
+    564          void I2C1_ER_IRQHandler(void)
+    565          {
+    566          }
+    567          
+    568          /*******************************************************************************
+    569          * Function Name  : I2C2_EV_IRQHandler
+    570          * Description    : This function handles I2C2 Event interrupt request.
+    571          * Input          : None
+    572          * Output         : None
+    573          * Return         : None
+    574          *******************************************************************************/
+    575          void I2C2_EV_IRQHandler(void)
+    576          {
+    577          }
+    578          
+    579          /*******************************************************************************
+    580          * Function Name  : I2C2_ER_IRQHandler
+    581          * Description    : This function handles I2C2 Error interrupt request.
+    582          * Input          : None
+    583          * Output         : None
+    584          * Return         : None
+    585          *******************************************************************************/
+    586          void I2C2_ER_IRQHandler(void)
+    587          {
+    588          }
+    589          
+    590          
+    591          void SPI1_IRQHandler(void)
+    592          {
+    593          }
+    594          
+    595          
+    596          
+    597          
+    598          void EXTI15_10_IRQHandler(void)
+    599          {
+    600          }
+    601          
+    602          /*******************************************************************************
+    603          * Function Name  : RTCAlarm_IRQHandler
+    604          * Description    : This function handles RTC Alarm interrupt request.
+    605          * Input          : None
+    606          * Output         : None
+    607          * Return         : None
+    608          *******************************************************************************/
+    609          void RTCAlarm_IRQHandler(void)
+    610          {
+    611          }
+    612          
+    613          /*******************************************************************************
+    614          * Function Name  : USBWakeUp_IRQHandler
+    615          * Description    : This function handles USB WakeUp interrupt request.
+    616          * Input          : None
+    617          * Output         : None
+    618          * Return         : None
+    619          *******************************************************************************/
+    620          void USBWakeUp_IRQHandler(void)
+    621          {
+    622          }
+    623          
+    624          /*******************************************************************************
+    625          * Function Name  : TIM8_BRK_IRQHandler
+    626          * Description    : This function handles TIM8 Break interrupt request.
+    627          * Input          : None
+    628          * Output         : None
+    629          * Return         : None
+    630          *******************************************************************************/
+    631          void TIM8_BRK_IRQHandler(void)
+    632          {
+    633          }
+    634          
+    635          /*******************************************************************************
+    636          * Function Name  : TIM8_UP_IRQHandler
+    637          * Description    : This function handles TIM8 overflow and update interrupt 
+    638          *                  request.
+    639          * Input          : None
+    640          * Output         : None
+    641          * Return         : None
+    642          *******************************************************************************/
+    643          void TIM8_UP_IRQHandler(void)
+    644          {
+    645          }
+    646          
+    647          /*******************************************************************************
+    648          * Function Name  : TIM8_TRG_COM_IRQHandler
+    649          * Description    : This function handles TIM8 Trigger and commutation interrupts 
+    650          *                  requests.
+    651          * Input          : None
+    652          * Output         : None
+    653          * Return         : None
+    654          *******************************************************************************/
+    655          void TIM8_TRG_COM_IRQHandler(void)
+    656          {
+    657          }
+    658          
+    659          /*******************************************************************************
+    660          * Function Name  : TIM8_CC_IRQHandler
+    661          * Description    : This function handles TIM8 capture compare interrupt request.
+    662          * Input          : None
+    663          * Output         : None
+    664          * Return         : None
+    665          *******************************************************************************/
+    666          void TIM8_CC_IRQHandler(void)
+    667          {
+    668          }
+    669          
+    670          /*******************************************************************************
+    671          * Function Name  : ADC3_IRQHandler
+    672          * Description    : This function handles ADC3 global interrupt request.
+    673          * Input          : None
+    674          * Output         : None
+    675          * Return         : None
+    676          *******************************************************************************/
+    677          void ADC3_IRQHandler(void)
+    678          {
+    679          }
+    680          
+    681          /*******************************************************************************
+    682          * Function Name  : FSMC_IRQHandler
+    683          * Description    : This function handles FSMC global interrupt request.
+    684          * Input          : None
+    685          * Output         : None
+    686          * Return         : None
+    687          *******************************************************************************/
+    688          void FSMC_IRQHandler(void)
+    689          {
+    690          }
+    691          
+    692          
+    693          /*******************************************************************************
+    694          * Function Name  : TIM5_IRQHandler
+    695          * Description    : This function handles TIM5 global interrupt request.
+    696          * Input          : None
+    697          * Output         : None
+    698          * Return         : None
+    699          *******************************************************************************/
+    700          void TIM5_IRQHandler(void)
+    701          {
+    702          }
+    703          
+    704          /*******************************************************************************
+    705          * Function Name  : SPI3_IRQHandler
+    706          * Description    : This function handles SPI3 global interrupt request.
+    707          * Input          : None
+    708          * Output         : None
+    709          * Return         : None
+    710          *******************************************************************************/
+    711          void SPI3_IRQHandler(void)
+    712          {
+    713          }
+    714          
+    715          
+    716          
+    717          /*******************************************************************************
+    718          * Function Name  : TIM6_IRQHandler
+    719          * Description    : This function handles TIM6 global interrupt request.
+    720          * Input          : None
+    721          * Output         : None
+    722          * Return         : None
+    723          *******************************************************************************/
+    724          void TIM6_IRQHandler(void)
+    725          {
+    726          }
+    727          
+    728          /*******************************************************************************
+    729          * Function Name  : TIM7_IRQHandler
+    730          * Description    : This function handles TIM7 global interrupt request.
+    731          * Input          : None
+    732          * Output         : None
+    733          * Return         : None
+    734          *******************************************************************************/
+    735          void TIM7_IRQHandler(void)
+    736          {
+    737          }
+    738          
+    739          /*******************************************************************************
+    740          * Function Name  : DMA2_Channel1_IRQHandler
+    741          * Description    : This function handles DMA2 Channel 1 interrupt request.
+    742          * Input          : None
+    743          * Output         : None
+    744          * Return         : None
+    745          *******************************************************************************/
+    746          void DMA2_Channel1_IRQHandler(void)
+    747          {
+    748          }
+    749          
+    750          /*******************************************************************************
+    751          * Function Name  : DMA2_Channel2_IRQHandler
+    752          * Description    : This function handles DMA2 Channel 2 interrupt request.
+    753          * Input          : None
+    754          * Output         : None
+    755          * Return         : None
+    756          *******************************************************************************/
+    757          void DMA2_Channel2_IRQHandler(void)
+    758          {
+    759          }
+    760          
+    761          /*******************************************************************************
+    762          * Function Name  : DMA2_Channel3_IRQHandler
+    763          * Description    : This function handles DMA2 Channel 3 interrupt request.
+    764          * Input          : None
+    765          * Output         : None
+    766          * Return         : None
+    767          *******************************************************************************/
+    768          void DMA2_Channel3_IRQHandler(void)
+    769          {
+    770          }
+    771          
+    772          /*******************************************************************************
+    773          * Function Name  : DMA2_Channel4_5_IRQHandler
+    774          * Description    : This function handles DMA2 Channel 4 and DMA2 Channel 5
+    775          *                  interrupt request.
+    776          * Input          : None
+    777          * Output         : None
+    778          * Return         : None
+    779          *******************************************************************************/
+    780          void DMA2_Channel4_5_IRQHandler(void)
+    781          {
+    782          }
+    783          
+    784          /******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   ADC1_2_IRQHandler
+       0   ADC3_IRQHandler
+       0   BusFaultException
+       0   CAN_RX1_IRQHandler
+       0   CAN_SCE_IRQHandler
+       0   DMA1_Channel1_IRQHandler
+         0   -> DMA_ClearITPendingBit
+       0   DMA1_Channel2_IRQHandler
+       0   DMA1_Channel3_IRQHandler
+       0   DMA1_Channel4_IRQHandler
+       0   DMA1_Channel5_IRQHandler
+       0   DMA1_Channel6_IRQHandler
+       0   DMA1_Channel7_IRQHandler
+       0   DMA2_Channel1_IRQHandler
+       0   DMA2_Channel2_IRQHandler
+       0   DMA2_Channel3_IRQHandler
+       0   DMA2_Channel4_5_IRQHandler
+       0   DebugMonitor
+       0   EXTI0_IRQHandler
+       0   EXTI15_10_IRQHandler
+       0   EXTI1_IRQHandler
+       0   EXTI2_IRQHandler
+       0   EXTI3_IRQHandler
+       0   EXTI4_IRQHandler
+       0   EXTI9_5_IRQHandler
+       0   FLASH_IRQHandler
+       0   FSMC_IRQHandler
+       0   HardFaultException
+       0   I2C1_ER_IRQHandler
+       0   I2C1_EV_IRQHandler
+       0   I2C2_ER_IRQHandler
+       0   I2C2_EV_IRQHandler
+       0   MemManageException
+       0   NMIException
+       0   PVD_IRQHandler
+       0   PendSVC
+       0   RCC_IRQHandler
+       0   RTCAlarm_IRQHandler
+       0   RTC_IRQHandler
+       0   SDIO_IRQHandler
+       0   SPI1_IRQHandler
+       0   SPI2_IRQHandler
+       0   SPI3_IRQHandler
+       0   SVCHandler
+       0   SysTickHandler
+       0   TAMPER_IRQHandler
+       0   TIM1_BRK_IRQHandler
+       0   TIM1_CC_IRQHandler
+       0   TIM1_TRG_COM_IRQHandler
+       0   TIM1_UP_IRQHandler
+       0   TIM2_IRQHandler
+       0   TIM3_IRQHandler
+       0   TIM4_IRQHandler
+       0   TIM5_IRQHandler
+       0   TIM6_IRQHandler
+       0   TIM7_IRQHandler
+       0   TIM8_BRK_IRQHandler
+       0   TIM8_CC_IRQHandler
+       0   TIM8_TRG_COM_IRQHandler
+       0   TIM8_UP_IRQHandler
+       0   UART4_IRQHandler
+       0   UART5_IRQHandler
+      16   USART1_IRQHandler
+        16   -> USART_ClearITPendingBit
+        16   -> USART_GetITStatus
+        16   -> USART_ReceiveData
+       0   USART2_IRQHandler
+       0   USART3_IRQHandler
+       0   USBWakeUp_IRQHandler
+       0   USB_HP_CAN_TX_IRQHandler
+       0   USB_LP_CAN_RX0_IRQHandler
+       0   UsageFaultException
+       0   WWDG_IRQHandler
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       2  ADC1_2_IRQHandler
+       2  ADC3_IRQHandler
+       2  BusFaultException
+       2  CAN_RX1_IRQHandler
+       2  CAN_SCE_IRQHandler
+      14  DMA1_Channel1_IRQHandler
+       2  DMA1_Channel2_IRQHandler
+       2  DMA1_Channel3_IRQHandler
+       2  DMA1_Channel4_IRQHandler
+       2  DMA1_Channel5_IRQHandler
+       2  DMA1_Channel6_IRQHandler
+       2  DMA1_Channel7_IRQHandler
+       2  DMA2_Channel1_IRQHandler
+       2  DMA2_Channel2_IRQHandler
+       2  DMA2_Channel3_IRQHandler
+       2  DMA2_Channel4_5_IRQHandler
+       2  DebugMonitor
+       2  EXTI0_IRQHandler
+       2  EXTI15_10_IRQHandler
+       2  EXTI1_IRQHandler
+       2  EXTI2_IRQHandler
+       2  EXTI3_IRQHandler
+       2  EXTI4_IRQHandler
+       2  EXTI9_5_IRQHandler
+       2  FLASH_IRQHandler
+       2  FSMC_IRQHandler
+       2  HardFaultException
+       2  I2C1_ER_IRQHandler
+       2  I2C1_EV_IRQHandler
+       2  I2C2_ER_IRQHandler
+       2  I2C2_EV_IRQHandler
+       2  MemManageException
+       2  NMIException
+       2  PVD_IRQHandler
+       2  PendSVC
+       2  RCC_IRQHandler
+       2  RTCAlarm_IRQHandler
+       2  RTC_IRQHandler
+       2  SDIO_IRQHandler
+       2  SPI1_IRQHandler
+       2  SPI2_IRQHandler
+       2  SPI3_IRQHandler
+       2  SVCHandler
+       2  SysTickHandler
+       2  TAMPER_IRQHandler
+       2  TIM1_BRK_IRQHandler
+       2  TIM1_CC_IRQHandler
+       2  TIM1_TRG_COM_IRQHandler
+       2  TIM1_UP_IRQHandler
+       2  TIM2_IRQHandler
+       2  TIM3_IRQHandler
+       2  TIM4_IRQHandler
+       2  TIM5_IRQHandler
+       2  TIM6_IRQHandler
+       2  TIM7_IRQHandler
+       2  TIM8_BRK_IRQHandler
+       2  TIM8_CC_IRQHandler
+       2  TIM8_TRG_COM_IRQHandler
+       2  TIM8_UP_IRQHandler
+       2  UART4_IRQHandler
+       2  UART5_IRQHandler
+     100  USART1_IRQHandler
+      56  USART1_rx_end
+          USART1_len
+          usart1_chk
+          Buffer_USART1
+       2  USART2_IRQHandler
+       2  USART3_IRQHandler
+       2  USBWakeUp_IRQHandler
+       2  USB_HP_CAN_TX_IRQHandler
+       2  USB_LP_CAN_RX0_IRQHandler
+       2  UsageFaultException
+       2  WWDG_IRQHandler
+       2  adc1_buffer
+
+ 
+  58 bytes in section .bss
+ 264 bytes in section .text
+ 
+ 264 bytes of CODE memory
+  58 bytes of DATA memory
+
+Errors: none
+Warnings: none
